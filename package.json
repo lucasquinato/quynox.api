@@ -1,0 +1,10 @@
+{
+  "name": "quynox.api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "env:dev": "node --watch --env-file=.env --env-file=.database.env ./src/index.js",
+    "env:prod": ""
+  }
+}
