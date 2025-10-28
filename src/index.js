@@ -1,7 +1,7 @@
 import DBConnection from "./database/db.connection.js";
 import express from "express";
 
-// import Account from "./database/models/Account.js";
+import Account from "./database/models/Account.js";
 
 const server = express();
 
@@ -10,7 +10,7 @@ const port = () => {
 
     // Verifica se a porta está dentro dos padrões:
     if (!port || isNaN(getPort)) throw new Error("Defina PORT_ENV corretamente.");
-    if (port < 1024 || port > 65535) throw new Error("Porta do servidor fora de escopo.");
+    if (port < 1024 || port > 65535) throw new RangeError("PORT_ENV fora de escopo.");
 
     // console.log(getPort);
     return getPort;
@@ -23,6 +23,13 @@ server.use(express.json());
 try {
     // Aguarda a conexão correta com o banco de dados:
     await DBConnection({ force: true });
+
+    await Account.create({
+        name: "a",
+        email: "",
+        password: ""
+    });
+
     // Abre o servidor para requisições:
     server.listen(port(), () => console.log("Servidor aberto - porta:", port()));
 

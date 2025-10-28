@@ -20,6 +20,15 @@ Account.init(
         name: {
             type: DataTypes.STRING,
             allowNull: true,
+            validate: {
+                notEmpty: {
+                    msg: "FIELD: name ! EMPTY VALUE.",
+                },
+                len: {
+                    args: [3, 80],
+                    msg: "FIELD: name ! 3 - 80 CHARACTERS."
+                },
+            }
         },
         email: {
             type: DataTypes.STRING,
@@ -50,6 +59,27 @@ Account.init(
         underscored: true,
         timestamps: true,
         paranoid: true,
+
+        hooks: {
+
+            async beforeSave(account) {
+                if (account.changed("password")) {
+                    const getRounds = Number(process.env.DATABASE_PASSWORD_ROUNDS);
+
+                    if (Number.isNaN(getRounds)) {
+                        throw new TypeError("Verifique o tipo de: DATABASE_PASSWORD_ROUNDS.");
+                    }
+
+                    if (getRounds < 4 || getRounds > 15) {
+                        throw new RangeError("Verifique o escopo de: DATABASE_PASSWORD_ROUNDS.");
+                    }
+
+                    const salt = await bcrypt.genSalt(getRounds);
+                    account.password = await bcrypt.hash(account.password, salt);
+                }
+            },
+
+        },
     },
 
 );
