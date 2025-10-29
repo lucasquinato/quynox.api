@@ -22,18 +22,26 @@ Account.init(
             allowNull: true,
             validate: {
                 notEmpty: {
-                    msg: "FIELD: name ! EMPTY VALUE.",
+                    msg: "DATABASE LEVEL ERROR ! EMPTY VALUE FIELD: name.",
                 },
                 len: {
                     args: [3, 80],
-                    msg: "FIELD: name ! 3 - 80 CHARACTERS."
+                    msg: "DATABASE LEVEL ERROR ! LENGHT FIELD: name.",
                 },
-            }
+            },
         },
         email: {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
+            validate: {
+                notEmpty: {
+                    msg: "DATABASE LEVEL ERROR ! EMPTY VALUE FIELD: email.",
+                },
+                isEmail: {
+                    msg: "DATABASE LEVEL ERROR ! IS EMAIL FIELD: email.",
+                },
+            }
         },
         password: {
             type: DataTypes.STRING,
